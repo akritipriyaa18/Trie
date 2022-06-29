@@ -1,0 +1,134 @@
+Question Link ----> https://www.codingninjas.com/codestudio/problems/implement-trie_1387095?utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_tries_videos&leftPanelTab=0
+
+insert(“WORD”): Ninja has to insert the string “WORD”  into this “TRIE” data structure.
+countWordsEqualTo(“WORD”): Ninja has to return how many times this “WORD” is present in this “TRIE”.
+countWordsStartingWith(“PREFIX”): Ninjas have to return how many words are there in this “TRIE” that have the string “PREFIX” as a prefix.
+erase(“WORD”): Ninja has to delete one occurrence of the string “WORD” from the “TRIE”.
+
+
+Basic Structure:
+struct Node{
+    Node* arr[26];
+    bool flag;
+    int cntWordsEnd = 0;
+    int cntPrefixs = 0;
+    
+    bool contains(char c)
+    {
+        return (arr[c - 'a'] != NULL);
+    }
+    
+    void put(char c , Node* newNode)
+    {
+        arr[c - 'a'] = newNode;
+    }
+    
+    Node* getNext(char c)
+    {
+        return arr[c - 'a'];
+    }
+    
+    void increaseCntWordsEnd()
+    {
+        cntWordsEnd++;
+    }
+    
+    void increaseCntPrefixs()
+    {
+        cntPrefixs++;
+    }
+    
+    void decreaseCntWordsEnd()
+    {
+        cntWordsEnd--;
+    }
+    
+    void decreaseCntPrefixs()
+    {
+        cntPrefixs--;
+    }
+    
+    int getCntWordsEnd()
+    {
+        return cntWordsEnd;
+    }
+    
+    int getCntPrefixs()
+    {
+        return cntPrefixs;
+    }
+    
+    void setFlag()
+    {
+        flag = true;
+    }
+};
+
+class Trie{
+     Node* root = new Node();
+    public:
+
+    Trie(){
+        // Write your code here.
+    }
+
+    //insertion
+    void insert(string &word){
+        Node* temp = root;
+        for(int i = 0; i < word.size(); i++)
+        {
+            if(!temp->contains(word[i]))
+            {
+                Node* newNode = new Node();
+                temp->put(word[i] , newNode);
+            }
+            temp->increaseCntPrefixs(); ----> //increasing prefixs
+            temp = temp->getNext(word[i]);
+        }
+        temp->increaseCntWordsEnd(); ----> //increasing words
+    }
+    
+    //countWordsEqualTo
+    int countWordsEqualTo(string &word){
+        Node* temp = root;
+        for(int i = 0; i < word.size(); i++)
+        {
+            if(temp->contains(word[i]))
+            {
+               temp = temp->getNext(word[i]);
+            }
+            else
+                return false;
+        }
+        return temp->getCntWordsEnd();
+    }
+    
+    //countWordsStartingWith
+    int countWordsStartingWith(string &word){
+        Node* temp = root;
+        for(int i = 0; i < word.size(); i++)
+        {
+            if(temp->contains(word[i]))
+            {
+               temp = temp->getNext(word[i]);
+            }
+            else
+                return 0;
+        }
+        return temp->getCntPrefixs();
+    }
+    
+    //erase
+    void erase(string & word) {
+    Node * temp = root;
+    for (int i = 0; i < word.length(); i++) {
+      if (temp -> contains(word[i])) {
+        temp = temp -> getNext(word[i]);
+        temp -> decreaseCntPrefixs();
+      } else {
+        return;
+      }
+    }
+    temp -> decreaseCntWordsEnd();
+  }
+    
