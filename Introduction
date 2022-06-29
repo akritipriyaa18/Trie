@@ -1,0 +1,54 @@
+TRIE:
+Trie is an efficient information retrival data structure. Using Trie, search complexities can be brought to optimal.
+
+For eg : We search anything on google , it autocompletes.
+         Typling ----> wo
+         Search Showing ----> words, womb , wolf
+         
+arr[] -> {"word" , "womb" , "abcde" , "abcf"}
+
+Does we have "word"??
+->very easily solved using hashing.
+| word - 1  |
+| womb - 1  |
+| abcde - 1 |
+| abcf - 1  |
+
+-> But the main challenge is does we have words starting from "wo"???
+     Can be solved using hashing but will increase space complexity alot.
+     | w - 2     |
+     | wo - 2    |
+     | wor - 1   |
+     | word - 1  |
+     | wom - 1   |
+     | womb - 1  |
+    
+    
+So, Trie comes in action.
+Trie always have nodes.
+
+Basic Structure:
+struct Node{
+    Node* arr[26] ---> containing 26 alphabets of Node type;
+    bool flag;
+    }
+    
+    root -> | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z | , flag
+    
+    For eg: arr[] -> {"word" , "womb" , "abcde" , "abcf"}
+            I have to find "word"
+            Next word is "womb"
+            
+            root -> | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | "w" | x | y | z | , flag
+                                                                                                               |
+                                                                                 ______________________________|                              
+                                                                                |
+                                                                                | a | b | c | d | e | f | g | h | i | j | k | l | m | n | "o" | p | q | r | s | t | u | v | w | x | y | z | , flag
+                                                                                                                                           |
+                                                                                                             ______________________________|                              
+                                                                                                            |
+                                                                                                            | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | "r" | s | t | u | v | w | x | y | z | , flag
+                                                                                                                                                                                   |
+                                                                                                                                                     ______________________________|                              
+                                                                                                                                                    |
+                                                                                                                                                    | a | b | c | "d" | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z | , flag = true
