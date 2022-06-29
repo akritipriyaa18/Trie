@@ -1,0 +1,138 @@
+Question Link ---> https://www.codingninjas.com/codestudio/problems/complete-string_2687860?utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_tries_videos&leftPanelTab=0
+
+A string is called a complete string if every prefix of this string is also present in the array ‘A’. 
+Ninja is challenged to find the longest complete string in the array ‘A’.
+If there are multiple strings with the same length, return the lexicographically smallest one and if no string exists, return "None".
+
+
+Steps:
+->Insert all words.
+->Reiterate and check.
+
+      arr[] = { "n" , "ninja" , "ni" , "ninj" , "ninga" }
+
+                    -----|_______n______|
+                   |     | flag = false |
+                   |
+                   |
+              -----|_______i______|
+             |     | flag = true  |
+             |
+             |
+      -----|_______n______|
+     |     | flag = true  |
+     |
+     |
+      -----|_______j___g_____| -----                         
+     |     | flag =    false |      |
+     |                              |
+     |                              |
+      -----|_______a______|         |_______a______|                             
+     |     | flag = true  |         | flag = false |
+     |
+     |
+      -----|_____________|
+     |     | flag = true |
+     |
+     |
+     
+     
+     
+     //code
+     
+     struct Node{
+    Node* arr[26];
+    bool flag;
+     
+    bool contains(char c)
+    {
+        return (arr[c - 'a'] != NULL);
+    }
+    
+    void put(char c , Node* newNode)
+    {
+        arr[c - 'a'] = newNode;
+    }
+    
+    Node* getNext(char c)
+    {
+        return arr[c - 'a'];
+    }
+    
+    void setEnd()
+    {
+        flag = true;
+    }
+    
+    bool isEnd()
+    {
+        return flag;
+    }
+};
+
+class Trie{
+    Node* root = new Node();
+    public:
+
+    Trie(){
+        // Write your code here.
+    }
+
+    void insert(string &word){
+        Node* temp = root;
+        for(int i = 0; i < word.size(); i++)
+        {
+            if(!temp->contains(word[i]))
+            {
+                Node* newNode = new Node();
+                temp->put(word[i] , newNode);
+            }
+            temp = temp->getNext(word[i]);
+        }
+        temp->setEnd();
+    }
+    
+    
+    bool checkIfPrefixsExists(string word)
+    {
+        bool fl = true;
+        Node* node = root;
+        for(int i = 0; i < word.size(); i++)
+        {
+            if(node->contains(word[i]))
+            {
+                node = node->getNext(word[i]);
+                if(node->isEnd() == false)
+                    return false;
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    
+    string completeString(int n, vector<string> &a){
+    Trie* trie = new Trie();
+    
+    for(auto &it : a)
+        trie->insert(it);
+    
+    string longest = "";
+    
+    for(auto &it : a)
+    {
+        if(trie->checkIfPrefixsExists(it)){
+            if(it.size() > longest.size())
+            {
+                longest = it;
+            }
+            else if(it.size() == longest.size() && it < longest)
+                longest = it;
+        }
+    }
+    
+    if(longest == "") return "None";
+    
+    return longest;
+}
+     
