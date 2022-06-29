@@ -1,0 +1,106 @@
+Question Link ---> https://leetcode.com/problems/maximum-xor-with-an-element-from-array/
+
+struct Node{
+    Node* arr[2];
+    bool flag;
+     
+    bool contains(int bit)
+    {
+        return (arr[bit] != NULL);
+    }
+    
+    void put(int bit , Node* newNode)
+    {
+        arr[bit] = newNode;
+    }
+    
+    Node* getNext(int bit)
+    {
+        return arr[bit];
+    }
+    
+};
+
+class Trie {
+    Node* root = new Node();
+public:
+    Trie() {
+        
+    }
+    
+    void insert(int num) {
+        Node* temp = root;
+        for(int i = 31; i >= 0; i--)
+        {
+            int bit = (num >> i) & 1;
+            if(!temp->contains(bit))
+            {
+                Node* newNode = new Node();
+                temp->put(bit , newNode);
+            }
+            temp = temp->getNext(bit);
+        }
+    }
+    
+    int maximum(int num)
+    {
+        Node* temp = root;
+        int maxNum = 0;
+         for(int i = 31; i >= 0; i--)
+        {
+            int bit = (num >> i) & 1;
+            if(temp->contains(1 - bit))
+            {
+                maxNum = maxNum | (1 << i);
+                temp = temp->getNext(1 - bit);
+            }
+             else{
+                 temp = temp->getNext(bit);
+             } 
+        }
+        return maxNum;
+    }
+    
+};
+
+class Solution {
+public:
+    vector<int> maximizeXor(vector<int>& nums, vector<vector<int>>& queries) {
+        
+        sort(nums.begin() , nums.end());
+        
+        vector<pair<int , pair<int , int>>> oQ;
+        int q = queries.size();
+        
+        for(int i = 0; i < q; i++)
+        {
+            oQ.push_back({queries[1] , {queries[0] , i}});
+        }
+        
+        sort(oQ.begin() , oQ.end());
+        
+        vector<int>ans(q , 0);
+        int ind = 0;
+        int n = nums.size();
+        
+        Trie trie;
+        
+        for(int i = 0; i < q; i++)
+        {
+            int ai = oQ.first;
+            int xi = oQ.second.first;
+            int qInd = oQ.second.second;
+            
+            while(ind < n && nums[i] < ai)
+            {
+                trie.insert(nums[i]);
+                ind++;
+            }
+            
+            if(ind == 0) ans[qInd] = -1;
+            else
+                ans[qInd] = trie.maximum(xi);
+        }
+        return ans;
+    }
+};
