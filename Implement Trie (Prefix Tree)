@@ -1,0 +1,87 @@
+Question Link - https://leetcode.com/problems/implement-trie-prefix-tree/
+
+Has to perform insertion , seraching and find if words starting with present or not
+
+Basic structure:
+
+struct Node{
+    Node* arr[26];
+    bool flag;
+     
+    bool contains(char c)  //To check if char contains another node or not
+    {
+        return (arr[c - 'a'] != NULL);
+    }
+    
+    void put(char c , Node* newNode) //To put newNode in that char
+    {
+        arr[c - 'a'] = newNode;
+    }
+    
+    Node* getNext(char c)    //To go to next char
+    {
+        return arr[c - 'a'];
+    }
+    
+    void setFlag()   //To set flag true if word completes
+    {
+        flag = true;
+    }
+};
+
+class Trie {
+    Node* root = new Node();
+public:
+    Trie() {
+        
+    }
+    
+    //insertion
+    void insert(string word) {
+        Node* temp = root;
+        for(int i = 0; i < word.size(); i++)
+        {
+            if(!temp->contains(word[i]))
+            {
+                Node* newNode = new Node();
+                temp->put(word[i] , newNode);
+            }
+            temp = temp->getNext(word[i]);
+        }
+        temp->setFlag();
+    }
+    
+    //searching
+    bool search(string word) {
+        Node* temp = root;
+        for(int i = 0; i < word.size(); i++)
+        {
+            if(temp->contains(word[i]))
+            {
+               temp = temp->getNext(word[i]);
+            }
+            else
+                return false;
+        }
+        if(temp->flag == true)
+            return true;
+        return false;
+    }
+    
+    //StartsWith
+    bool startsWith(string prefix) {
+        Node* temp = root;
+        for(int i = 0; i < prefix.size(); i++)
+        {
+            if(temp->contains(prefix[i]))
+            {
+               temp = temp->getNext(prefix[i]);
+            }
+            else
+                return false;
+        }
+        return true;
+    }
+    
+    
+
