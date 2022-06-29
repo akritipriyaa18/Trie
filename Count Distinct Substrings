@@ -1,0 +1,52 @@
+Question Link ----> https://www.codingninjas.com/codestudio/problems/count-distinct-substrings_985292?utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_tries_videos&leftPanelTab=0
+
+
+string = "abab"
+
+struct Node{
+    Node* arr[26];
+    bool flag;
+     
+    bool contains(char c)
+    {
+        return (arr[c - 'a'] != NULL);
+    }
+    
+    void put(char c , Node* newNode)
+    {
+        arr[c - 'a'] = newNode;
+    }
+    
+    Node* getNext(char c)
+    {
+        return arr[c - 'a'];
+    }
+    
+    void setFlag()
+    {
+        flag = true;
+    }
+};
+
+
+int countDistinctSubstrings(string &s)
+{
+    Node * root = new Node();
+    int count = 1;
+    
+    int n = s.size();
+    for (int i = 0; i < n; i++) { ---> a , b , a
+    Node * node = root;
+
+    for (int j = i; j < n; j++) {   ----> a , ab , aba , abab ----> b , ba , bab ----->
+      if (!node -> contains(s[j])) {
+        node -> put(s[j], new Node());
+        count++;
+      }
+      node = node -> getNext(s[j]);
+    }
+
+  }
+  return count;
+
+}
